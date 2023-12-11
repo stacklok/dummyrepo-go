@@ -22,4 +22,4 @@ demonstration purposes with stacklok projects. It is a simple Go project.
 - `.gitignore` file suitable for Go projects
 - GitHub Actions CI workflow
 
-Happy testing! 🦀🎉
+Happy testing! 🎉
