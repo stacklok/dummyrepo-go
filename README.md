@@ -18,8 +18,8 @@ demonstration purposes with stacklok projects. It is a simple Go project.
 ## Features
 
 - Pre-configured `go.mod` file
-- Sample Rust code in `cmd/` directory.
+- Sample Go code in `main.go`.
 - `.gitignore` file suitable for Go projects
 - GitHub Actions CI workflow
 
-Happy testing! 🦀🎉
+Happy testing! 🦦🎉
