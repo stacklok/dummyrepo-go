@@ -68,6 +68,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: generate build provenance
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: github-early-access/generate-build-provenance@main
+        with:
+          subject-name: ${{ steps.meta.outputs.tags }}
+          subject-digest: ${{ steps.build-and-push.outputs.digest }}
+          push-to-registry: false
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
