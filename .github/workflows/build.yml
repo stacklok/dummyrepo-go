@@ -70,7 +70,7 @@ jobs:
           cache-to: type=gha,mode=max
       - name: generate build provenance
         if: ${{ github.event_name != 'pull_request' }}
-        uses: github-early-access/generate-build-provenance@main
+        uses: github-early-access/generate-build-provenance@e9e8ff9e95bfdd79719197569bb666e2889c2e55 # main
         with:
           subject-name: ${{ steps.meta.outputs.tags }}
           subject-digest: ${{ steps.build-and-push.outputs.digest }}
