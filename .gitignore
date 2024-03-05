@@ -19,3 +19,14 @@
 
 # Go workspace file
 go.work
+
+# Filter out key files
+*.key
+*.pem
+*.crt
+*.csr
+*.pub
+*.base64
+*.sig
+
+.idea/
