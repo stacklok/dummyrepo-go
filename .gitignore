@@ -30,3 +30,4 @@ go.work
 *.sig
 
 .idea/
+demo-go-binary

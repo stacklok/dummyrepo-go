@@ -1,3 +1,3 @@
-module github.com/stacklok/dummyrepo-go
+module github.com/stacklok/demo-repo-go
 
 go 1.20
