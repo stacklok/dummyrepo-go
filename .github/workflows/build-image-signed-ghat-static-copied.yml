@@ -21,18 +21,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - id: lower-repo
+        run: |
+         echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Build and push image
         id: push-step
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}:static
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:static
           context: .
           file : Dockerfile.static
 
       - name: Attest image
         uses: github-early-access/generate-build-provenance@main
         with:
-          subject-name: ghcr.io/${{ github.repository }}
+          subject-name: ghcr.io/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push-step.outputs.digest }}
           push-to-registry: true

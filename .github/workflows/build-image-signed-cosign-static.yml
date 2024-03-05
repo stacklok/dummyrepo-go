@@ -4,7 +4,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -40,12 +39,16 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - id: lower-repo
+        run: |
+         echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}:static
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:static
           context: .
           file : Dockerfile.static
 
@@ -54,4 +57,4 @@ jobs:
         env:
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: |
-          echo "ghcr.io/${{ github.repository }}:static" | xargs -I {} cosign sign --yes {}@${DIGEST}
+          echo "ghcr.io/${{ env.IMAGE_NAME }}:static" | xargs -I {} cosign sign --yes {}@${DIGEST}

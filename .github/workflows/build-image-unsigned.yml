@@ -4,7 +4,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -34,6 +33,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - id: lower-repo
+        run: |
+         echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
@@ -46,14 +49,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:daily
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:latest,ghcr.io/${{ env.IMAGE_NAME }}:daily
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-#      - name: Sign the published Docker image
-#        env:
-#          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-#        run: |
-#          echo "ghcr.io/${{ github.repository }}:daily" | xargs -I {} cosign sign --yes {}@${DIGEST}
-#          echo "ghcr.io/${{ github.repository }}:latest" | xargs -I {} cosign sign --yes {}@${DIGEST}
