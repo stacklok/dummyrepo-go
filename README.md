@@ -1,4 +1,4 @@
-# Demo-repo-Go 🦦
+# demo-repo-go 🦦
 
 ## Overview
 
