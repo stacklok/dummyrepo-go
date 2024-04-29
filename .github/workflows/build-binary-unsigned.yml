@@ -24,7 +24,7 @@ jobs:
           go build -v -o demo-repo-go-binary ./...
 
 #      - name: Sign artifact
-#        uses: github-early-access/generate-build-provenance@main
+#        uses: actions/attest-build-provenance@v1.0.0
 #        with:
 #          subject-path: '${{ github.workspace }}/demo-repo-go-binary'
 
