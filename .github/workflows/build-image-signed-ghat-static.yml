@@ -9,6 +9,7 @@ jobs:
       id-token: write
       packages: write
       contents: write
+      attestations: write
 
     steps:
       - name: Checkout repository
@@ -31,7 +32,7 @@ jobs:
           file : Dockerfile.static
 
       - name: Attest image
-        uses: actions/attest-build-provenance@v1.0.0
+        uses: actions/attest-build-provenance@v1.4.1
         with:
           subject-name: ghcr.io/${{ github.repository }}
           subject-digest: ${{ steps.push-step.outputs.digest }}
