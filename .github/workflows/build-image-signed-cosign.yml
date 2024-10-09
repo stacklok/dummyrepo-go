@@ -8,7 +8,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,6 +36,9 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=raw,value=daily
 
       - name: Build and push Docker image
         id: build-and-push
@@ -44,16 +46,15 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:daily
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-
       - name: Sign the published Docker image
         env:
+          TAGS: ${{ steps.meta.outputs.tags }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: |
           cosign version
-          echo "ghcr.io/${{ github.repository }}:daily" | xargs -I {} cosign sign --yes {}@${DIGEST}
-          echo "ghcr.io/${{ github.repository }}:latest" | xargs -I {} cosign sign --yes {}@${DIGEST}
+          echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}

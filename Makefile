@@ -1,6 +1,9 @@
 # Replace this with your image name, i.e. ghcr.io/<your-username>/demo-repo-go:latest
 IMAGE_NAME?=ghcr.io/stacklok/demo-repo-go:latest
 
+# Lowercase the image name to handle mixed-case GitHub org/repo names
+IMAGE_NAME := $(shell echo $(IMAGE_NAME) | tr '[:upper:]' '[:lower:]')
+
 # Replace this with your GitHub username and PAT.
 # This is used to authenticate with GitHub Container Registry (GHCR)
 # and push the image to your repository.
