@@ -8,7 +8,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,20 +36,22 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=static
 
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}:static
+          tags: ${{ steps.meta.outputs.tags }}
           context: .
-          file : Dockerfile.static
-
+          file: Dockerfile.static
 
       - name: Sign the published Docker image
         env:
+          TAGS: ${{ steps.meta.outputs.tags }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: |
           cosign version
-          echo "ghcr.io/${{ github.repository }}:static" | xargs -I {} cosign sign --yes {}@${DIGEST}
+          echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
